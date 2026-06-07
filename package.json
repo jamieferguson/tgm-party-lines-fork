@@ -4,7 +4,7 @@
   "description": "Party Lines - Parliament By Numbers",
   "scripts": {
     "build": "node scripts/build-data.js",
-    "prestart": "lessc app/styles/main.less app/styles/main.css",
+    "prestart": "lessc --js app/styles/main.less app/styles/main.css",
     "start": "node server.js"
   },
   "dependencies": {
