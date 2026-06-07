@@ -411,6 +411,18 @@ async function main() {
   console.log('');
   console.log('Phase 3 complete: ' + processedLines + ' lines, ' + Object.keys(freq).length + ' terms with data');
 
+  // Sort each term's data by party then week (chart expects sorted data)
+  var termKeys = Object.keys(freq);
+  for (var ti = 0; ti < termKeys.length; ti++) {
+    freq[termKeys[ti]].data.sort(function(a, b) {
+      if (a.party < b.party) return -1;
+      if (a.party > b.party) return 1;
+      if (a.week < b.week) return -1;
+      if (a.week > b.week) return 1;
+      return 0;
+    });
+  }
+
   // Cleanup temp file
   fs.unlinkSync(SPEECHES_TMP);
 

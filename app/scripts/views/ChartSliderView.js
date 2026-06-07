@@ -40,7 +40,7 @@
       // XXX hack to make step after render properly :(
       .data(data.slice(0,-1))
       .enter().append("rect")
-      .attr("x", function(d, i){ return xScale(i); })
+      .attr("x", function(d, i){ return xScale(app.weeks[i]); })
       .attr("y", 0)
       .attr('class','slider-blind')
       .attr("width", xScale.rangeBand())

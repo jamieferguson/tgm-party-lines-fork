@@ -18,7 +18,7 @@
 
   Api.prototype.weeksLoaded = function() {
     if (!this._weeksLoaded) {
-      this._weeksLoaded = $.getJSON('data/weeks.json');
+      this._weeksLoaded = $.getJSON('/data/weeks.json');
     }
 
     return this._weeksLoaded;
@@ -26,13 +26,13 @@
 
   Api.prototype.termLoaded = function(term, exactMatch) {
     var key = JSON.stringify({ term: term, exactMatch: exactMatch });
+    var lookupTerm = term.toLowerCase().replace(/\s+/g, ' ');
 
     if (!_.has(this._termsLoaded, key)) {
-      var bucket = hashCode(term) % NUM_BUCKETS;
-      this._termsLoaded[key] = $.getJSON('data/wordfreq/' + bucket + '.json')
+      var bucket = hashCode(lookupTerm) % NUM_BUCKETS;
+      this._termsLoaded[key] = $.getJSON('/data/wordfreq/' + bucket + '.json')
         .then(function(data) {
-          var tokens = term.toLowerCase().replace(/\s+/g, ' ');
-          return data[term] || { data: [], tokens: tokens };
+          return data[lookupTerm] || { data: [], tokens: lookupTerm };
         });
     }
 
@@ -61,7 +61,7 @@
 
     $.when.apply($, promises).done(function() {
       var args = _.rest(arguments);
-      var data = _.pluck(args, 0);
+      var data = args;
 
       dfd.resolve(data);
     });

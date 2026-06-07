@@ -38,7 +38,7 @@
     furtherSearch.empty();
 
     var promises = _.map(Object.keys(months), function(month) {
-      return $.getJSON('data/hansards/' + month + '.json');
+      return $.getJSON('/data/hansards/' + month + '.json');
     });
 
     $.when.apply($, promises).done(function() {
