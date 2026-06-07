@@ -1,15 +1,13 @@
 {
-  "author": "The Global Mail",
   "name": "partylines",
-  "version": "0.0.0",
-  "dependencies": {
-    "grunt-recess": "0.3.0",
-    "express": "~3.1.0",
-    "cluster": "~0.7.7",
-    "cloudfiles-mirror": "~0.1.7"
+  "version": "1.0.0",
+  "description": "Party Lines - Parliament By Numbers",
+  "scripts": {
+    "start": "node server.js"
   },
-  "engines": {
-    "node": "0.8.x",
-    "npm":  "1.1.x"
+  "dependencies": {
+    "express": "^4.21.0",
+    "less": "^4.6.4",
+    "pg": "^8.13.0"
   }
 }

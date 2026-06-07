@@ -3,3 +3,8 @@ node_modules
 .DS_Store
 app/components
 .deployrc
+seed.js
+seed-hansards.js
+seed-real.js
+.openaustralia-cache/
+app/styles/main.css

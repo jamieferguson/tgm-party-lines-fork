@@ -131,7 +131,6 @@
       var filterParty = app.filterParty && app.parties[app.filterParty];
 
       _.each(data, function(d) {
-        // Allow users to filter out parties
         if (filterParty && d.party !== filterParty.name) {
           return;
         }
@@ -144,24 +143,21 @@
           party = { name: d.party, data: [] };
         }
 
-        var weeksIndex = app.weeksIndex[d.week];
-        party.data.push({ x: weeksIndex, y: d.freq });
+        party.data.push({ x: d.week, y: d.freq });
       });
 
       if (party.name) {
         series.push(party);
       }
 
-      // fill out data with zeroes if there's no data for a given week
       _.each(series, function(partyData) {
-       var xPoints = _.pluck(partyData.data, 'x');
+        var xPoints = _.pluck(partyData.data, 'x');
 
         partyData.data = _.map(weeks, function(week) {
-          var weekIndex = app.weeksIndex[week];
-          var matchingIndex = xPoints.indexOf(weekIndex);
+          var matchingIndex = xPoints.indexOf(week);
 
           if (matchingIndex === -1) {
-            return { x: weekIndex, y: 0 };
+            return { x: week, y: 0 };
           }
 
           return partyData.data[matchingIndex];

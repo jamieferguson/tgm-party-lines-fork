@@ -2,7 +2,7 @@
   'use strict';
 
   var app = {
-    url: "http://partylines-api.theglobalmail.org",
+    url: "",
 
     parties: [
       { abbrev: 'DEM', name: 'Australian Democrats', colour: '#f3bf07' },
