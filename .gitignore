@@ -8,3 +8,4 @@ seed-hansards.js
 seed-real.js
 .openaustralia-cache/
 app/styles/main.css
+data/

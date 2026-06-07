@@ -3,7 +3,7 @@ var { Pool } = require("pg");
 var path = require("path");
 
 var pool = new Pool({
-  connectionString: "postgresql://neondb_owner:npg_FQ1Orc8mTxSh@ep-raspy-frog-a7pto9bb-pooler.ap-southeast-2.aws.neon.tech/neondb?sslmode=require"
+  connectionString: process.env.DATABASE_URL || "postgresql://neondb_owner:npg_Tm9nlzhpfS7O@ep-aged-hat-aje136mt-pooler.c-3.us-east-2.aws.neon.tech/neondb?sslmode=require"
 });
 
 var app = express();
