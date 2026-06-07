@@ -228,7 +228,7 @@ h4.preset-label {
         cursor: pointer;
         text-decoration: none;
         // background: url(/images/preset-arrow.png) no-repeat 95% center transparent;
-        .opacity(100);
+        opacity: 1;
       }
 
 
@@ -238,7 +238,7 @@ h4.preset-label {
   li.active a {
     background: url(/images/preset-arrow.png) no-repeat 95% center transparent;
     color: @grayDarker;
-    .opacity(100);
+    opacity: 1;
 
     &:hover {
       background-color: transparent;
@@ -448,17 +448,17 @@ button.create-your-own {
   }
 
   .slider-blind {
-    .opacity(1);
+    opacity:.01;
     fill:white;
   }
 
   .active {
-    .opacity(100);
+    opacity: 1;
     fill: rgba(0,0,0,0.06);
   }
 
   .selected {
-    .opacity(100);
+    opacity: 1;
     fill: rgba(0,0,0,0.04);
     stroke: rgba(0,0,0,0.4);
   }
@@ -727,7 +727,7 @@ button.create-your-own {
 }
 
 .modal-backdrop, .modal-backdrop.fade.in {
-  .opacity(100);
+  opacity: 1;
   background: url(/images/snippets-bg.png) repeat rgba(255,255,255,0.8);
 }
 
