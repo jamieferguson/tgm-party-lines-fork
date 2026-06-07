@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Party Lines - Parliament By Numbers",
   "scripts": {
+    "build": "node scripts/build-data.js",
     "start": "node server.js"
   },
   "dependencies": {
     "express": "^4.21.0",
-    "less": "^4.6.4",
-    "pg": "^8.13.0"
+    "less": "^4.6.4"
   }
 }

@@ -1,8 +1,16 @@
 (function(app) {
   'use strict';
 
-  // Welcome to Deferred City
-  // TODO Can we use Backbone.Collection here?
+  var NUM_BUCKETS = 100;
+
+  function hashCode(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash);
+  }
 
   var Api = function() {
     this._termsLoaded = {};
@@ -10,7 +18,7 @@
 
   Api.prototype.weeksLoaded = function() {
     if (!this._weeksLoaded) {
-      this._weeksLoaded = $.getJSON(app.config.url + '/api/weeks');
+      this._weeksLoaded = $.getJSON('data/weeks.json');
     }
 
     return this._weeksLoaded;
@@ -20,7 +28,12 @@
     var key = JSON.stringify({ term: term, exactMatch: exactMatch });
 
     if (!_.has(this._termsLoaded, key)) {
-      this._termsLoaded[key] = $.getJSON(app.config.url + '/api/wordchoices/term/' + term, { c: exactMatch });
+      var bucket = hashCode(term) % NUM_BUCKETS;
+      this._termsLoaded[key] = $.getJSON('data/wordfreq/' + bucket + '.json')
+        .then(function(data) {
+          var tokens = term.toLowerCase().replace(/\s+/g, ' ');
+          return data[term] || { data: [], tokens: tokens };
+        });
     }
 
     return this._termsLoaded[key];
@@ -37,32 +50,22 @@
     return dfd.promise();
   };
 
-  // this method is only to poly fill the old version of the app
-  // termInfo should be like:
-  // [ { term: 'termOne', exactMatch: true, term: 'termTwo', exactMatch: false }]
   Api.prototype.whenWeeksAndTermsLoaded = function(termsInfo) {
-    // wrap this in our deferred so we can clean up the arguments in done(fn) callbacks
     var dfd = new $.Deferred();
 
-    // start with the weeks promise
     var promises = [ this.weeksLoaded() ];
 
-    // push a promise for each term
     _.each(termsInfo, function(termInfo) {
       promises.push(this.termLoaded(termInfo.term, termInfo.exactMatch));
     }, this);
 
-    // when the weeks and terms are loaded, resolve our deferred with just the term data
     $.when.apply($, promises).done(function() {
-      // don't need weeks data
       var args = _.rest(arguments);
-      // pluck the json data off each arg object
       var data = _.pluck(args, 0);
 
       dfd.resolve(data);
     });
 
-    // promises are nice for consuption
     return dfd.promise();
   };
 

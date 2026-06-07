@@ -21,28 +21,53 @@
   };
 
   Snippets.loadSnippets = function() {
-    // hansardIds is an array of CSV strings
     var ids = _.uniq(app.hansardIds.join(',').split(','))
                 .slice(0, Snippets.maxSnippets).join(',');
-    if (!ids) return;
-    var endpoint = app.url + '/api/hansards';
+    if (!ids) {
+      Snippets.showNoData();
+      return;
+    }
+
+    var months = {};
+    _.each(ids.split(','), function(id) {
+      var m = id.match(/(\d{4}-\d{2})/);
+      if (m) months[m[1]] = true;
+    });
+
     container.html('<div id="loading"><p>Loading Hansard transcripts...</p></div>');
     furtherSearch.empty();
 
-    $.getJSON(endpoint, { ids: ids }, function(json) {
+    var promises = _.map(Object.keys(months), function(month) {
+      return $.getJSON('data/hansards/' + month + '.json');
+    });
+
+    $.when.apply($, promises).done(function() {
       container.empty();
-      _.each(json, function(hansard) {
-        var $html = Snippets.render(hansard);
-        // Highlight the keywords by wrapping in span with highlight class
-        $html.find('.quotes-container').append(Snippets.buildQuotes(hansard));
+      var all = {};
+      _.each(arguments, function(data) {
+        _.extend(all, data);
+      });
+      var idList = ids.split(',');
+      _.each(idList, function(id) {
+        var h = all[id];
+        if (!h) return;
+        var $html = Snippets.render(h);
+        $html.find('.quotes-container').append(Snippets.buildQuotes(h));
         container.append($html);
       });
 
-      if (json.length === Snippets.maxSnippets) {
+      if (container.children().length === 0) {
+        Snippets.showNoData();
+        return;
+      }
+
+      if (container.children().length >= Snippets.maxSnippets) {
         furtherSearch.append(Snippets.buildOpenAuFurtherSearch());
       }
 
       app.vent.trigger('snippetsLoaded');
+    }).fail(function() {
+      Snippets.showNoData();
     });
   };
 
@@ -66,14 +91,10 @@
 
         if (tokens) {
           searchTerm = _.map(tokens.split(' '), function(token){
-            // TODO when non-exact matching is enabled, add
-            // return token + (exactMatch ? '' : '[a-z]*');
             return token;
           }).join(' ');
         }
 
-        // Search for phrase in text (also look for phrase with hyphens to
-        // match "same-sex marriage")
         var regex = '(^|[^a-zA-Z])(' + searchTerm + '|' + searchTerm.replace(/ /, '-') + ')([^a-zA-Z]|$)';
         speech = speech.replace(
           RegExp(regex, 'gmi'),
@@ -142,7 +163,6 @@
     snippetsLink.slideDown();
   });
 
-  // hide snippets whenever new charts start loading
   app.vent.on('terms:loading', function() {
     outerContainer.hide();
     snippetsLink.hide();

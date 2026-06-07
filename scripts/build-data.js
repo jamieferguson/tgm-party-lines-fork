@@ -6,7 +6,7 @@ var readline = require('readline');
 
 var DATA_URL = 'https://data.openaustralia.org.au';
 var CACHE_DIR = path.join(__dirname, '..', '.openaustralia-cache');
-var DATA_DIR = path.join(__dirname, '..', 'data');
+var DATA_DIR = path.join(__dirname, '..', 'app', 'data');
 var WORD_FREQ_DIR = path.join(DATA_DIR, 'wordfreq');
 var SPEECHES_TMP = path.join(CACHE_DIR, 'speeches.jsonl');
 
